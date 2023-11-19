@@ -6,17 +6,58 @@ import {
   KeyboardAvoidingView,
   Pressable,
   Alert,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import * as ImagePicker from 'expo-image-picker';
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const navigation = useNavigation();
+
+  const defaultProfileImage = require('../assets/test.png');
+  
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permissions required", "You need to grant gallery permissions to use this feature");
+      return;
+    }
+
+    const pickerResult = await ImagePicker.launchImageLibraryAsync();
+    if (pickerResult.canceled === true) {
+      return;
+    }
+
+    const pickedImageUri = pickerResult.assets && pickerResult.assets[0].uri;
+    if (pickedImageUri) {
+      setImage(pickedImageUri);
+    }  
+  };
+
+  const takePhoto = async () => {
+    const cameraPermissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (cameraPermissionResult.granted === false) {
+      Alert.alert("Permissions required", "You need to grant camera permissions to use this feature");
+      return;
+    }
+
+    const photoResult = await ImagePicker.launchCameraAsync();
+    if (photoResult.canceled === true) {
+      return;
+    }
+
+    const photoUri = photoResult.assets && photoResult.assets[0].uri;
+    if (photoUri) {
+      setImage(photoUri);
+    }
+  };
+
   const handleRegister = () => {
     const user = {
       name: name,
@@ -59,12 +100,12 @@ const RegisterScreen = () => {
       <KeyboardAvoidingView>
         <View
           style={{
-            marginTop: 100,
+            marginTop: 80,
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Text style={{ color: "#4A55A2", fontSize: 17, fontWeight: "600" }}>
+          <Text style={{ color: "#105ccc", fontSize: 17, fontWeight: "600" }}>
             Register
           </Text>
 
@@ -73,7 +114,13 @@ const RegisterScreen = () => {
           </Text>
         </View>
 
-        <View style={{ marginTop: 50 }}>
+        <Image 
+          source={image ? { uri: image } : defaultProfileImage} 
+          style={styles.profileImage} 
+        />
+
+
+        <View style={{ marginTop: 20 }}>
           <View style={{ marginTop: 10 }}>
             <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
               Name
@@ -90,7 +137,7 @@ const RegisterScreen = () => {
                 width: 300,
               }}
               placeholderTextColor={"black"}
-              placeholder="Enter your name"
+              placeholder="Enter Your Name"
             />
           </View>
 
@@ -110,7 +157,7 @@ const RegisterScreen = () => {
                 width: 300,
               }}
               placeholderTextColor={"black"}
-              placeholder="enter Your Email"
+              placeholder="Enter Your Email"
             />
           </View>
 
@@ -131,35 +178,24 @@ const RegisterScreen = () => {
                 width: 300,
               }}
               placeholderTextColor={"black"}
-              placeholder="Passowrd"
+              placeholder="Password"
             />
           </View>
 
-          <View style={{ marginTop: 10 }}>
-            <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
-              Image
-            </Text>
-
-            <TextInput
-              value={image}
-              onChangeText={(text) => setImage(text)}
-              style={{
-                fontSize: email ? 18 : 18,
-                borderBottomColor: "gray",
-                borderBottomWidth: 1,
-                marginVertical: 10,
-                width: 300,
-              }}
-              placeholderTextColor={"black"}
-              placeholder="Image"
-            />
+          <View style={styles.buttonContainer}>
+            <Pressable onPress={pickImage} style={styles.button}>
+              <Text style={styles.buttonText}>Select a Photo</Text>
+            </Pressable>
+            <Pressable onPress={takePhoto} style={styles.button}>
+              <Text style={styles.buttonText}>Take a Photo</Text>
+            </Pressable>
           </View>
 
           <Pressable
             onPress={handleRegister}
             style={{
               width: 200,
-              backgroundColor: "#4A55A2",
+              backgroundColor: "#105ccc",
               padding: 15,
               marginTop: 50,
               marginLeft: "auto",
@@ -195,4 +231,47 @@ const RegisterScreen = () => {
 
 export default RegisterScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%', 
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: '#105ccc',
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 5, 
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: 15,
+    alignSelf: 'center',
+  },
+  header: {
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  headerText: {
+    color: '#105ccc',
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  subHeaderText: {
+    fontSize: 17,
+    fontWeight: '600',
+    marginTop: 15,
+  },
+  signInButtonText: {
+    textAlign: 'center',
+    color: 'gray',
+    fontSize: 16,
+  },
+});

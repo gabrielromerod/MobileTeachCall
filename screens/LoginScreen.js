@@ -5,11 +5,15 @@ import {
   Text,
   TextInput,
   View,
+  Dimensions,
 } from "react-native";
 import React, { useState ,useEffect} from "react";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Lottie from 'lottie-react-native';
+
+const {width, height} = Dimensions.get('window');
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -64,12 +68,12 @@ const LoginScreen = () => {
       <KeyboardAvoidingView>
         <View
           style={{
-            marginTop: 100,
+            marginTop: 80,
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Text style={{ color: "#4A55A2", fontSize: 17, fontWeight: "600" }}>
+          <Text style={{ color: "#105ccc", fontSize: 17, fontWeight: "600" }}>
             Sign In
           </Text>
 
@@ -77,8 +81,11 @@ const LoginScreen = () => {
             Sign In to Your Account
           </Text>
         </View>
+        <View style={styles.lottie}>
+          <Lottie source={require('../assets/animations/login.json')} autoPlay loop />
+        </View>
 
-        <View style={{ marginTop: 50 }}>
+        <View style={{ marginTop: 40 }}>
           <View>
             <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
               Email
@@ -95,7 +102,7 @@ const LoginScreen = () => {
                 width: 300,
               }}
               placeholderTextColor={"black"}
-              placeholder="enter Your Email"
+              placeholder="Enter Your Email"
             />
           </View>
 
@@ -116,7 +123,7 @@ const LoginScreen = () => {
                 width: 300,
               }}
               placeholderTextColor={"black"}
-              placeholder="Passowrd"
+              placeholder="Password"
             />
           </View>
 
@@ -124,7 +131,7 @@ const LoginScreen = () => {
             onPress={handleLogin}
             style={{
               width: 200,
-              backgroundColor: "#4A55A2",
+              backgroundColor: "#105ccc",
               padding: 15,
               marginTop: 50,
               marginLeft: "auto",
@@ -160,4 +167,11 @@ const LoginScreen = () => {
 
 export default LoginScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  lottie: {
+    width: width * 0.7,
+    height: height * 0.32,
+    marginTop: 20,
+    alignSelf: "center",
+  },
+});
