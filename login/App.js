@@ -30,9 +30,7 @@ export default function App() {
   }, []);
 
   if (isFirstLaunch === null) {
-
-    return null; 
-
+    return null; // O un componente de carga
   }
 
   return (
@@ -57,4 +55,3 @@ export default function App() {
     </Provider>
   );
 }
-
