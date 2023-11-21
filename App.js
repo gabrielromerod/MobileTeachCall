@@ -30,7 +30,9 @@ export default function App() {
   }, []);
 
   if (isFirstLaunch === null) {
-    return null;
+
+    return null; 
+
   }
 
   return (
@@ -55,3 +57,4 @@ export default function App() {
     </Provider>
   );
 }
+
