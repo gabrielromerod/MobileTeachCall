@@ -1,60 +1,111 @@
-import React, { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Provider } from "react-native-paper";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { theme } from "./src/core/theme";
+import {  Text, Platform,  View } from 'react-native';
+import { Home, Portfolio, Prices, Settings, Transaction } from "./screens";
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Entypo } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
-import {
-  StartScreen,
-  LoginScreen,
-  RegisterScreen,
-  ResetPasswordScreen,
-  Dashboard,
-} from "./src/screens";
 
-const Stack = createStackNavigator();
-
-export default function App() {
-  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
-
-  useEffect(() => {
-    AsyncStorage.getItem("alreadyLaunched").then((value) => {
-      if (value === null) {
-        AsyncStorage.setItem("alreadyLaunched", "true");
-        setIsFirstLaunch(true);
-      } else {
-        setIsFirstLaunch(false);
-      }
-    });
-  }, []);
-
-  if (isFirstLaunch === null) {
-
-    return null; 
-
+const Tab =createBottomTabNavigator();
+const screenOptions = {
+  tabBarShowLabel:false,
+  headerShown:false,
+  tabBarStyle:{
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    left: 0,
+    elevation: 0,
+    height: 60,
+    background: "#fff"
   }
-
-  return (
-    <Provider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="StartScreen"
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="StartScreen" component={StartScreen} />
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <Stack.Screen name="Dashboard" component={Dashboard} />
-          <Stack.Screen
-            name="ResetPasswordScreen"
-            component={ResetPasswordScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
-  );
 }
-
+export default function App() {
+  return (
+     <NavigationContainer>
+       <Tab.Navigator screenOptions={screenOptions}>
+          <Tab.Screen 
+          name="Home" 
+          component={Home} 
+          options={{
+            tabBarIcon: ({focused})=>{
+              return (
+                <View style={{alignItems: "center", justifyContent: "center"}}> 
+                  <Entypo name="home" size={24} color={focused ? "#16247d": "#111"} />
+                  <Text style={{fonSize: 12, color: "#16247d"}}>HOME</Text>
+            </View>
+              )
+            }
+          }}
+          />
+          <Tab.Screen 
+          name="Portfolio" 
+          component={Portfolio} 
+          options={{
+            tabBarIcon: ({focused})=>{
+              return (
+                <View style={{alignItems: "center", justifyContent: "center"}}> 
+                 <Entypo name="wallet" size={24} color={focused ? "#16247d": "#111"} />
+                  <Text style={{fonSize: 12, color: "#16247d"}}>WALLET</Text>
+            </View>
+              )
+            }
+          }}
+          />
+          <Tab.Screen 
+          name="Transaction" 
+          component={Transaction} 
+           options={{
+            tabBarIcon: ({focused})=>{
+              return (
+                <View
+                 style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#16247d",
+                  width: Platform.OS == "ios" ? 50 : 60,
+                  height: Platform.OS == "ios" ? 50 : 60,
+                  top: Platform.OS == "ios" ? -10 : -20,
+                  borderRadius: Platform.OS == "ios" ? 25 : 30
+                 }}
+                >
+                  <FontAwesome name="exchange" size={24} color="#fff" />
+                </View>
+              )
+            }
+           }}
+          />
+          <Tab.Screen
+           name="Prices" 
+           component={Prices}
+           options={{
+            tabBarIcon: ({focused})=>{
+              return (
+                <View style={{alignItems: "center", justifyContent: "center"}}> 
+                 <MaterialIcons name="stacked-line-chart" size={24} color={focused ? "#16247d": "#111"} />
+                  <Text style={{fonSize: 12, color: "#16247d"}}>PRICES</Text>
+            </View>
+              )
+            }
+          }}
+           />
+          <Tab.Screen 
+          name="Settings" 
+          component={Settings} 
+          options={{
+            tabBarIcon: ({focused})=>{
+              return (
+                <View style={{alignItems: "center", justifyContent: "center"}}> 
+                 <Ionicons name="settings" size={24}  color={focused ? "#16247d": "#111"} />
+                  <Text style={{fonSize: 12, color: "#16247d"}}>SETTINGS</Text>
+            </View>
+              )
+            }
+          }}
+          />
+       </Tab.Navigator>
+     </NavigationContainer>
+)
+}
