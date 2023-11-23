@@ -1,36 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, Linking } from 'react-native';
-import { Button, Card } from 'react-native-paper';
+import { Card, Button } from 'react-native-paper';
 
 const BookingListScreen = () => {
   const [bookings, setBookings] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      const authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWJvbGFuZGlhMTU2QGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX3N0dWRlbnQiLCJleHAiOjE3MDA3NjY0NjMsImlhdCI6MTcwMDczMDQ2M30.U0ub4ev2t2yNVzAU9ghnTsi1woSqwsA03POPFcfRGm4";
-      const endpoint = "http://192.168.3.7:8080/bookings/student"; // Endpoint para estudiantes
-
-      try {
-        const response = await fetch(endpoint, {
-          headers: { 'Authorization': authToken }
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setBookings(data.content || []);
-        setTotalPages(data.totalPages || 0);
-      } catch (error) {
-        console.error('Error al obtener los bookings:', error);
-      }
-    };
-
     fetchBookings();
   }, [page]);
+
+  const fetchBookings = async () => {
+    setIsLoading(true);
+    const authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWJvbGFuZGlhMTU2QGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX3N0dWRlbnQiLCJleHAiOjE3MDA3NjY0NjMsImlhdCI6MTcwMDczMDQ2M30.U0ub4ev2t2yNVzAU9ghnTsi1woSqwsA03POPFcfRGm4";
+    const endpoint = `http://192.168.3.7:8080/bookings/student?page=${page}`;
+
+    try {
+      const response = await fetch(endpoint, {
+        headers: { 'Authorization': authToken }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setBookings(prevBookings => (page === 0 ? data.content : [...prevBookings, ...data.content]));
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      console.error('Error al obtener los bookings:', error);
+    }
+    setIsLoading(false);
+  };
 
   const addOneHour = (startTime) => {
     const [hours, minutes, seconds] = startTime.split(':');
@@ -66,14 +69,8 @@ const BookingListScreen = () => {
     );
   };
 
-  const handlePreviousPage = () => {
-    if (page > 0) {
-      setPage(prev => prev - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (page < totalPages - 1) {
+  const loadMore = () => {
+    if (page < totalPages - 1 && !isLoading) {
       setPage(prev => prev + 1);
     }
   };
@@ -83,16 +80,13 @@ const BookingListScreen = () => {
       <FlatList
         data={bookings}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item, index) => item.id.toString() + index} // Modificado para garantizar claves únicas
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.8}
       />
-      <View style={styles.pagination}>
-        <Button mode="outlined" disabled={page === 0} onPress={handlePreviousPage}>Anterior</Button>
-        <Text style={styles.pageText}>{`Página ${page + 1} de ${totalPages}`}</Text>
-        <Button mode="outlined" disabled={page === totalPages - 1} onPress={handleNextPage}>Siguiente</Button>
-      </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
