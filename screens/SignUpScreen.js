@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Image, TextInput, TouchableOpacity, Text } from "react-native";
+import { StyleSheet,ScrollView,View, Image, TextInput, TouchableOpacity, Text, Alert } from "react-native";
 import { signUp } from "../services/authServices"; // Asegúrate de importar signUp
 import { themeColors } from "../theme";
 import { SafeAreaView} from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
+import { useNavigation } from "@react-navigation/native";
 
 
 export default function SignUpScreen() {
@@ -12,6 +13,11 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState(""); // Asegúrate de que 'role' tenga un valor válido
+  const navigation = useNavigation();
+
+ const onRoleChange = (newRole) => {
+   setRole(newRole);
+ };
 
   const handleSignUp = async () => {
     try {
@@ -23,14 +29,17 @@ export default function SignUpScreen() {
         role,
       });
       console.log("Registro exitoso:", userData);
-      // Aquí puedes manejar la navegación post-registro o la actualización del estado
+      // Muestra un mensaje de alerta cuando el registro es exitoso
+      Alert.alert("Registro Exitoso", "Tu cuenta ha sido creada con éxito.", [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
     } catch (error) {
       console.error("Error en el registro:", error);
       // Manejar errores
     }
   };
   return (
-    <View
+    <ScrollView
       className="flex-1 bg-white"
       style={{ backgroundColor: themeColors.bg }}
     >
@@ -86,13 +95,21 @@ export default function SignUpScreen() {
             onChangeText={setPassword}
             placeholder="Enter Password"
           />
-          <Text className="text-gray-700 ml-4">Role</Text>
-          <TextInput
-            className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-7"
-            value={role}
-            onChangeText={setRole}
-            placeholder="Enter role"
-          />
+          <Text className="text-gray-700 ml-4">Elige tu Role</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={role === "student" ? styles.buttonSelected : styles.button}
+              onPress={() => onRoleChange("student")}
+            >
+              <Text style={styles.buttonText}>Estudiante</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={role === "teacher" ? styles.buttonSelected : styles.button}
+              onPress={() => onRoleChange("teacher")}
+            >
+              <Text style={styles.buttonText}>Profesor</Text>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
             onPress={handleSignUp}
             className="py-3 bg-yellow-400 rounded-xl"
@@ -134,6 +151,36 @@ export default function SignUpScreen() {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  button: {
+    backgroundColor: "gray",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonSelected: {
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+  },
+});

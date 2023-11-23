@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.18.106:8080/auth";
+const BASE_URL = "http://192.168.56.1:8080/auth";
 
 export const signIn = async (email, password, role) => {
   try {
-    const response = await axios.post(`${BASE_URL}/login`, {
+    const response = await axios.post(`${BASE_URL}/signin`, {
       email,
       password,
       role, // Asegúrate de que tu backend maneje este campo correctamente

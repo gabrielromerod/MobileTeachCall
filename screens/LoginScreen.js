@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, ScrollView} from "react-native";
+
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import { signIn } from "../services/authServices.js"; 
@@ -13,14 +14,17 @@ export default function LoginScreen() {
   // Estados para email, contraseña y rol
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [role, setRole] = useState(""); 
-
+   const onRoleChange = (newRole) => {
+     setRole(newRole);
+   };
   const handleLogin = async () => {
     try {
       console.log("Intentando iniciar sesión con:", email, password, role);
       const userData = await signIn(email, password, role);
       console.log("Login exitoso:", userData);
+      // Navegar a HomeScreen después del inicio de sesión exitoso
+      navigation.navigate("HomeScreen");
     } catch (error) {
       console.error("Error en el inicio de sesión:", error);
       if (error.response) {
@@ -39,7 +43,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View
+    <ScrollView
       className="flex-1 bg-white"
       style={{ backgroundColor: themeColors.bg }}
     >
@@ -79,13 +83,21 @@ export default function LoginScreen() {
             value={password}
             onChangeText={setPassword}
           />
-          <Text className="text-gray-700 ml-4">Email Address</Text>
-          <TextInput
-            className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-            placeholder="Rol"
-            value={role}
-            onChangeText={setRol}
-          />
+          <Text className="text-gray-700 ml-4">Elige tu Role</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={role === "student" ? styles.buttonSelected : styles.button}
+              onPress={() => onRoleChange("student")}
+            >
+              <Text style={styles.buttonText}>Estudiante</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={role === "teacher" ? styles.buttonSelected : styles.button}
+              onPress={() => onRoleChange("teacher")}
+            >
+              <Text style={styles.buttonText}>Profesor</Text>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity className="flex items-end">
             <Text className="text-gray-700 mb-5">Forgot Password?</Text>
           </TouchableOpacity>
@@ -130,6 +142,37 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
+
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  button: {
+    backgroundColor: "gray",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonSelected: {
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+  },
+});
