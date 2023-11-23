@@ -14,7 +14,7 @@ const BookingListScreen = () => {
 
   const fetchBookings = async () => {
     setIsLoading(true);
-    const authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWJvbGFuZGlhMTU2QGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX3N0dWRlbnQiLCJleHAiOjE3MDA3NjY0NjMsImlhdCI6MTcwMDczMDQ2M30.U0ub4ev2t2yNVzAU9ghnTsi1woSqwsA03POPFcfRGm4";
+    const authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWJvbGFuZGlhMTU2QGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX3N0dWRlbnQiLCJleHAiOjE3MDA4MDUwMDYsImlhdCI6MTcwMDc2OTAwNn0.Y9rg49bBVgQvZRWGjo_N0-1BI6OjkySN_kawRDaSjkU";
     const endpoint = `http://192.168.3.7:8080/bookings/student?page=${page}`;
 
     try {

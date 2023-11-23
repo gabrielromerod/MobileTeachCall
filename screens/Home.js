@@ -4,7 +4,7 @@ import LottieView from 'lottie-react-native';
 
 const API_URL = "http://192.168.3.7:8080";
 const API_PREFIX = '/posts';
-const authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWJvbGFuZGlhMTU2QGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX3N0dWRlbnQiLCJleHAiOjE3MDA3NjY0NjMsImlhdCI6MTcwMDczMDQ2M30.U0ub4ev2t2yNVzAU9ghnTsi1woSqwsA03POPFcfRGm4";
+const authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWJvbGFuZGlhMTU2QGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX3N0dWRlbnQiLCJleHAiOjE3MDA4MDUwMDYsImlhdCI6MTcwMDc2OTAwNn0.Y9rg49bBVgQvZRWGjo_N0-1BI6OjkySN_kawRDaSjkU";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
