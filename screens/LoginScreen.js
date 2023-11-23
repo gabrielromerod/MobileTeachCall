@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, ScrollView} from "react-native";
-
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import { signIn } from "../services/authServices.js"; 
@@ -24,7 +23,7 @@ export default function LoginScreen() {
       const userData = await signIn(email, password, role);
       console.log("Login exitoso:", userData);
       // Navegar a HomeScreen después del inicio de sesión exitoso
-      navigation.navigate("HomeScreen");
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Error en el inicio de sesión:", error);
       if (error.response) {
