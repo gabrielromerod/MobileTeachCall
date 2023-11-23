@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text,Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Icon } from 'react-native-elements';
 
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 8,
         elevation: 5,
-        bottom: 5,
-        marginRight: 120,
+        bottom: 4,
+        marginRight: 10,
     },
 });
 
