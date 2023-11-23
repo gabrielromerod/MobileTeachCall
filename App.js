@@ -1,11 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import AppNavigation from './navigation/appNavigation';
+
+import React from "react";
+import AppNavigator from "./navigation/appNavigation";
 
 
+const App = () => {
+  return <AppNavigator />;
+};
 
-export default function App() {
-  return (
-    <AppNavigation />
-  );
-}
+export default App;
