@@ -9,7 +9,7 @@ const BookingListScreen = () => {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWJvbGFuZGlhMTU2QGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX3N0dWRlbnQiLCJleHAiOjE3MDA3NjY0NjMsImlhdCI6MTcwMDczMDQ2M30.U0ub4ev2t2yNVzAU9ghnTsi1woSqwsA03POPFcfRGm4"; // Asegúrate de que tu token está actualizado
+      const authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWJvbGFuZGlhMTU2QGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX3N0dWRlbnQiLCJleHAiOjE3MDA3NjY0NjMsImlhdCI6MTcwMDczMDQ2M30.U0ub4ev2t2yNVzAU9ghnTsi1woSqwsA03POPFcfRGm4";
       const endpoint = "http://192.168.3.7:8080/bookings/student"; // Endpoint para estudiantes
 
       try {
@@ -32,16 +32,28 @@ const BookingListScreen = () => {
     fetchBookings();
   }, [page]);
 
+  const addOneHour = (startTime) => {
+    const [hours, minutes, seconds] = startTime.split(':');
+    const date = new Date();
+    date.setHours(parseInt(hours, 10), parseInt(minutes, 10), parseInt(seconds, 10));
+    date.setHours(date.getHours() + 1);
+    return date.toTimeString().split(' ')[0];
+  };
+
   const renderItem = ({ item }) => {
-    const { link, timeSlot, course, professor } = item;
-    const dateTime = timeSlot ? `${timeSlot.date} ${timeSlot.startTime}` : 'No disponible';
-    const professorName = `${professor.firstName} ${professor.lastName}`;
+    const { link, timeSlot, course, professor, student } = item;
+    const dateTime = timeSlot ? `${timeSlot.date}` : 'No disponible';
+    const startTime = timeSlot ? `${timeSlot.startTime}` : 'No disponible';
+    const endTime = timeSlot ? addOneHour(timeSlot.startTime) : 'No disponible';
+    const name = professor ? `${professor.firstName} ${professor.lastName}` : `${student.firstName} ${student.lastName}`;
+    const role = professor ? 'Profesor' : 'Estudiante';
 
     return (
       <Card style={styles.card}>
-        <Card.Title title={course.title} subtitle={`Hora: ${dateTime}`} />
+        <Card.Title title={course.title} subtitle={`Fecha: ${dateTime}`} />
         <Card.Content>
-          <Text style={styles.text}>{`Profesor: ${professorName}`}</Text>
+          <Text style={styles.text}>{`Hora: ${startTime} - ${endTime}`}</Text>
+          <Text style={styles.text}>{`${role}: ${name}`}</Text>
           <Button 
             icon="link" 
             mode="contained" 
@@ -86,6 +98,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    marginVertical: 50,
     backgroundColor: '#f0f0f0'
   },
   card: {
