@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.3.7:8080/auth";
+const BASE_URL = "http://192.168.56.1:8080/auth";
 
 export const signIn = async (email, password, role) => {
   try {
